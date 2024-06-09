@@ -4,4 +4,4 @@
 Prototyped a db connection pool:
 1. Used sqlite3 as the db.
 2. Created a bounded blocking queue using a go channel.
-3. Same channel acts as a semaphore
+3. Same channel acts as a semaphore for reliable concurrency.
