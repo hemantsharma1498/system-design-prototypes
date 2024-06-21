@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"net/http"
 	"sync"
+	"time"
 )
 
 type users struct {
@@ -18,7 +19,7 @@ type user struct {
 }
 
 func (s *HttpServer) BookSeats(w http.ResponseWriter, r *http.Request, d *sql.DB) {
-  rows, err := d.Query("SELECT * FROM customers LIMIT 5;")
+  rows, err := d.Query("SELECT * FROM customers ORDER BY name")
   if err != nil {
     w.Write([]byte("Encountered an error"))
     w.WriteHeader(http.StatusInternalServerError)
@@ -36,6 +37,7 @@ func (s *HttpServer) BookSeats(w http.ResponseWriter, r *http.Request, d *sql.DB
     user := user{Name: name, Id: id}
     users.Users = append(users.Users, user)
   }
+  start := time.Now() 
   var wg sync.WaitGroup 
   wg.Add(len(users.Users))
   for i := 0;i<len(users.Users);i++{
@@ -52,7 +54,8 @@ func (s *HttpServer) BookSeats(w http.ResponseWriter, r *http.Request, d *sql.DB
   }
   wg.Wait()
 
-
+  elapsed := time.Since(start)
+  fmt.Println("Total time taken: ", elapsed)
   data, err := json.Marshal(users)
   if err != nil {
     w.Write([]byte("Encountered some error"))
@@ -65,13 +68,13 @@ func book(user *user, d *sql.DB) (string, error){
   if err != nil {
     return "", err
   }
-  row := tx.QueryRow("SELECT seat_number FROM seats WHERE customer_id IS NULL ORDER BY seat_number LIMIT 1 FOR UPDATE SKIP LOCKED;") 
+  row := tx.QueryRow("SELECT seat_number FROM seats WHERE customer_id IS NULL ORDER BY seat_number LIMIT 1 FOR UPDATE SKIP LOCKED") 
   if row.Err() != nil {
     return "", row.Err()
   }
   var seatNumber string
   row.Scan(&seatNumber)
-  
+  fmt.Printf("User %s trying to claim seat %s\n", user.Name, seatNumber)
   _, err = tx.Exec("UPDATE seats SET customer_id = ?, customer_name = ? WHERE seat_number = ?", user.Id, user.Name, seatNumber)
   if err != nil {
     return "", err 
