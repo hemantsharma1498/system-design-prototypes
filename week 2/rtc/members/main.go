@@ -1,25 +1,25 @@
 package main
 
 import (
-	"members/server"
-	"members/store"
-	"context"
 	"log"
+	"members/server"
+	"members/store/mysqlDb"
 )
 
-const httpAddress = ":8090"
+const httpAddress = ":3000"
 
 func main(){
-  log.Printf("Initialising connection balancer")
+  log.Printf("Initialising members server")
+  
   log.Printf("Connecting to database...")
-  ctx := context.Background()
-  store, err := store.NewConnBalConnector().Connect(ctx)
+  store, err := mysqlDb.NewMembersDbConnector().Connect()
   if err != nil {
     log.Panicf("Unable to connect to db, error: %s\n", err)
   }
   log.Printf("Db connection established")
-  s := server.InitServer(store.Db)
-  if err = s.Start(httpAddress); err != nil {
+
+  s := server.InitServer(httpAddress, store)
+  if err = s.Start(); err != nil {
     log.Panicf("Failed to initialise server at %s, error: %s\n", httpAddress, err)
   }
 }

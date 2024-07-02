@@ -1,15 +1,16 @@
-package dto
+
+package server
 
 
-
-type Login struct {
+type LoginReq struct {
   Email string `json:"email"` 
   Password string `json:"password"`
 }
 
-type SignUp struct {
+type SignUpReq struct {
   Email string `json:"email"` 
   FirstName string `json:"firstName"`
   LastName string `json:"lastName"`
   Organisation string `json:"org"`
 }
+
