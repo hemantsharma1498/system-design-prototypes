@@ -11,46 +11,47 @@ import (
 const dsn = "hemant:1@Million@tcp(localhost)/members"
 
 func NewMembersDbConnector() store.Connecter {
-  return &MembersDbConnector{}
+	return &MembersDbConnector{}
 }
 
 type MembersDbConnector struct {
-  db *sql.DB
+	db *sql.DB
 }
 
 func (m *MembersDbConnector) Connect() (store.Storage, error) {
-  if m.db == nil {
-    var err error
-    m.db, err = initDb()
-    if err != nil {
-      return nil, err
-    }
-    return m, nil
-  }
-  return m, nil
+	if m.db == nil {
+		var err error
+		m.db, err = initDb()
+		if err != nil {
+			return nil, err
+		}
+		return m, nil
+	}
+	return m, nil
 }
 
 func initDb() (*sql.DB, error) {
-  
-  db, err := sql.Open("mysql", dsn)
-  if err != nil {
-    return nil, err
-  }
 
-  if err = db.Ping() ; err != nil {
-    return nil, err
-  }
+	db, err := sql.Open("mysql", dsn)
+	if err != nil {
+		return nil, err
+	}
 
-  return db, nil
+	if err = db.Ping(); err != nil {
+		return nil, err
+	}
+
+	return db, nil
 }
 
-func (m *MembersDbConnector) CreateAccount(account *types.Account) error {
-  return nil
+func (m *MembersDbConnector) CreateAccount(account *types.MemberAccount) error {
+
+	return nil
 }
 
+func (m *MembersDbConnector) GetMemberByEmail(emailIds []string) (*types.MemberAccount, error) {
+	if len(emailIds) == 0 {
 
-func (m *MembersDbConnector) GetMemberByEmail(emailId string) (*types.Account, error) {
-  
-  return nil, nil
+	}
+	return nil, nil
 }
-
