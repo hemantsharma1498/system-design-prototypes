@@ -14,6 +14,7 @@ type Members struct {
 
 func InitServer(listenAddress string, store store.Storage) *Members {
 	s := &Members{listenAddress: listenAddress, Router: http.NewServeMux(), store: store}
+    s.Routes()
 	return s
 }
 

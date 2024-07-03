@@ -3,8 +3,6 @@ package mysqlDb
 import (
 	"database/sql"
 	"members/store"
-	"members/store/types"
-
 	_ "github.com/go-sql-driver/mysql"
 )
 
@@ -44,14 +42,3 @@ func initDb() (*sql.DB, error) {
 	return db, nil
 }
 
-func (m *MembersDbConnector) CreateAccount(account *types.MemberAccount) error {
-
-	return nil
-}
-
-func (m *MembersDbConnector) GetMemberByEmail(emailIds []string) (*types.MemberAccount, error) {
-	if len(emailIds) == 0 {
-
-	}
-	return nil, nil
-}

@@ -1,12 +1,13 @@
 package store
 
 import (
+	"context"
 	"members/store/types"
 )
 
 type Storage interface {
-	CreateAccount(*types.MemberAccount) error
-	GetMemberByEmail([]string) (*types.MemberAccount, error)
+	CreateAccount(context.Context, *types.MemberAccount) (*types.MemberAccount, error)
+	GetMembersByEmail(context.Context, []string) ([]*types.MemberAccount, error)
 }
 
 type Connecter interface {

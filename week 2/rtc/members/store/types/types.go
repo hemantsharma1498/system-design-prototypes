@@ -5,6 +5,9 @@ package types
 type MemberAccount struct {
 	Id           int64
 	Email        string
+	FirstName    string
+	LastName     string
+	Org          string
 	PasswordHash string
 	Salt         string
 }
