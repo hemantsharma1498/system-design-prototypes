@@ -7,6 +7,7 @@ import (
 )
 
 const httpAddress = ":3000"
+const grpcAddress = ":8081"
 
 func main() {
 	log.Printf("Initialising members server")
@@ -18,8 +19,8 @@ func main() {
 	}
 	log.Printf("Db connection established")
 
-	s := server.InitServer(httpAddress, store)
-	if err = s.Start(); err != nil {
+	s := server.InitServer(store)
+	if err = s.Start(httpAddress, grpcAddress); err != nil {
 		log.Panicf("Failed to initialise server at %s, error: %s\n", httpAddress, err)
 	}
 }

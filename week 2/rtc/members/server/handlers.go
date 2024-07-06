@@ -6,6 +6,7 @@ import (
 	"encoding/json"
 	"errors"
 	"log"
+	"members/pkg/proto"
 	"members/store/types"
 	"net/http"
 
@@ -20,6 +21,17 @@ const (
 )
 
 func (m *Members) GetCommServerAddress(w http.ResponseWriter, r *http.Request) {
+	d := &GetCommServerAddressReq{}
+	if err := decodeReqBody(r, d); err != nil {
+		writeResponse(w, err, "Encountered an error. Please try again", http.StatusInternalServerError)
+	}
+	res, err := m.ConnectionClient.GetCommServerAddr(r.Context(), &proto.GetCommServerAddrReq{Org: d.Org})
+	if err != nil {
+		log.Printf("Unable to fetch communication server for %s from connection-balancer\n", d.Org)
+		writeResponse(w, err, "Encountered an error. Please try again", http.StatusInternalServerError)
+	}
+	log.Printf("Addres for %s is %s", d.Org, res.Address)
+	writeResponse(w, nil, &GetCommServerAddressRes{Address: res.Address}, http.StatusInternalServerError)
 
 }
 

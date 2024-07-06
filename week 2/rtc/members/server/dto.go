@@ -11,3 +11,11 @@ type SignUpReq struct {
 	LastName     string `json:"lastName"`
 	Organisation string `json:"org"`
 }
+
+type GetCommServerAddressReq struct {
+	Org string `json:"org"`
+}
+
+type GetCommServerAddressRes struct {
+	Address string `json:"address"`
+}
