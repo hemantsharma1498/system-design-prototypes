@@ -5,7 +5,6 @@ import (
 	"database/sql"
 	"fmt"
 	"log"
-	"math/rand"
 	"net"
 	"net/http"
 
@@ -18,16 +17,14 @@ type ConnectionBalancer struct {
 	Router          *http.ServeMux
 	GrpcServer      *grpc.Server
 	LoadingStatus   bool
-	InstanceID      int
 	ServerAddresses map[string]string
 	Db              *sql.DB
 	proto.ConnectionServer
 }
 
 func InitServer(d *sql.DB) *ConnectionBalancer {
-	s := &ConnectionBalancer{Router: http.NewServeMux(), LoadingStatus: false, ServerAddresses: make(map[string]string, 1), Db: d, InstanceID: rand.Int()}
+	s := &ConnectionBalancer{Router: http.NewServeMux(), LoadingStatus: false, ServerAddresses: make(map[string]string, 1), Db: d}
 	s.LoadCommunicationServers()
-	//fmt.Println(s.ServerAddresses)
 	s.Routes()
 	return s
 }
