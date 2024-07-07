@@ -11,8 +11,6 @@ import (
 	"google.golang.org/grpc"
 )
 
-const port = 50051
-
 type ConnectionBalancer struct {
 	Router          *http.ServeMux
 	GrpcServer      *grpc.Server
@@ -29,12 +27,12 @@ func InitServer(d *sql.DB) *ConnectionBalancer {
 	return s
 }
 
-func (c *ConnectionBalancer) Start(httpAddr string, grpcAddr string) error {
+func (c *ConnectionBalancer) Start(httpAddr string, grpcAddr int) error {
 	log.Printf("Starting http server at: %s\n", httpAddr)
 
 	//Start Grpc Server
 	go func() {
-		lis, err := net.Listen("tcp", fmt.Sprintf(":%d", port))
+		lis, err := net.Listen("tcp", fmt.Sprintf(":%d", grpcAddr))
 		if err != nil {
 			log.Fatalf("failed to listen: %v", err)
 		}

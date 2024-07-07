@@ -8,7 +8,7 @@ import (
 )
 
 const httpAddress = ":8080"
-const grpcAddress = ":8081"
+const grpcAddress = 8081
 
 func main() {
 	log.Printf("Initialising connection balancer")
