@@ -16,17 +16,17 @@ syntax = "proto3";
 
 option go_package = "proto/";
 
-package helloworld;
+package proto;
 
-service Connection {
-    rpc GetCommServerAddr(GetCommServerAddrReq) returns (GetCommServerAddrReply) {}
+service Messages {
+    rpc GetMessage(GetMessageReq) returns (GetMessageReply) {}
 }
 
-message GetCommServerAddrReq {
+message GetMessageReq {
     string org = 1;
+    string channel = 2;
+    string msg = 3;
 }
 
-message GetCommServerAddrReply {
-    string address = 1;
+message GetMessageReply {
 }
-
