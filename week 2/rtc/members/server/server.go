@@ -2,7 +2,6 @@ package server
 
 import (
 	"log"
-	//"members/pkg/proto"
 	"members/pkg/proto"
 	"members/store"
 	"net/http"

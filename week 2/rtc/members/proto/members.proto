@@ -16,7 +16,7 @@ syntax = "proto3";
 
 option go_package = "proto/";
 
-package helloworld;
+package proto;
 
 service Connection {
     rpc GetCommServerAddr(GetCommServerAddrReq) returns (GetCommServerAddrReply) {}
