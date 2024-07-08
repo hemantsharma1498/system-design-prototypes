@@ -12,16 +12,16 @@ import (
 const Timeout = 1
 
 type Cache struct {
-	Client *redis.Client
+	client *redis.Client
 }
 
 func NewCache() *Cache {
 	rdb := redis.NewClient(&redis.Options{})
-	return &Cache{Client: rdb}
+	return &Cache{client: rdb}
 }
 
 func (c *Cache) Start(addr, password string) (*Cache, error) {
-	c.Client = redis.NewClient(&redis.Options{
+	c.client = redis.NewClient(&redis.Options{
 		Addr:     addr,
 		Password: password,
 	})
@@ -37,7 +37,7 @@ func (c *Cache) Start(addr, password string) (*Cache, error) {
 func (c *Cache) isConnected() error {
 	ctx, cancel := context.WithTimeout(context.Background(), Timeout*time.Second)
 	defer cancel()
-	_, err := c.Client.Ping(ctx).Result()
+	_, err := c.client.Ping(ctx).Result()
 	if err != nil {
 		return err
 	}
@@ -48,7 +48,7 @@ func (c *Cache) Get(key string, value interface{}) error {
 	ctx, cancel := context.WithTimeout(context.Background(), Timeout*time.Second)
 	defer cancel()
 
-	strValue, err := c.Client.Get(ctx, key).Result()
+	strValue, err := c.client.Get(ctx, key).Result()
 	if err != nil {
 		return err
 	}
@@ -59,6 +59,16 @@ func (c *Cache) Get(key string, value interface{}) error {
 	return nil
 }
 
+func (c *Cache) Del(key string) error {
+	ctx, cancel := context.WithTimeout(context.Background(), Timeout*time.Second)
+	defer cancel()
+
+	_, err := c.client.Del(ctx, key).Result()
+	if err != nil {
+		return err
+	}
+	return nil
+}
 func (c *Cache) Set(key string, value interface{}) error {
 	ctx, cancel := context.WithTimeout(context.Background(), Timeout*time.Second)
 	defer cancel()
@@ -66,7 +76,7 @@ func (c *Cache) Set(key string, value interface{}) error {
 	if err != nil {
 		return err
 	}
-	status := c.Client.Set(ctx, key, bData, 0)
+	status := c.client.Set(ctx, key, bData, 0)
 	if status.Err() != nil {
 		return err
 	}
@@ -81,7 +91,7 @@ func (c *Cache) Subscribe(channels []string) error {
 	}
 	ctx, cancel := context.WithTimeout(context.Background(), Timeout*time.Second)
 	defer cancel()
-	c.Client.Subscribe(ctx, channels...)
+	c.client.Subscribe(ctx, channels...)
 	return nil
 }
 
@@ -93,7 +103,7 @@ func (c *Cache) Receive(channel string) (<-chan *redis.Message, error) {
 	}
 	ctx, cancel := context.WithTimeout(context.Background(), Timeout*time.Second)
 	defer cancel()
-	return c.Client.Subscribe(ctx, channel).Channel(), nil
+	return c.client.Subscribe(ctx, channel).Channel(), nil
 }
 
 func (c *Cache) Publish(channel string, message string) error {
@@ -105,6 +115,6 @@ func (c *Cache) Publish(channel string, message string) error {
 	ctx, cancel := context.WithTimeout(context.Background(), Timeout*time.Second)
 	defer cancel()
 
-	c.Client.Publish(ctx, channel, message)
+	c.client.Publish(ctx, channel, message)
 	return nil
 }
