@@ -1,7 +1,6 @@
 package server
 
 import (
-	"communications/client"
 	"communications/pkg/cache"
 	"communications/pkg/proto"
 	"google.golang.org/grpc"
@@ -14,10 +13,6 @@ type CommunicationServer struct {
 	Router     *http.ServeMux
 	GrpcClient proto.MessagesClient
 	Redis      *cache.Cache
-}
-
-type Hub struct {
-	clients map[*client.Client]bool
 }
 
 func InitServer(cache *cache.Cache) *CommunicationServer {
